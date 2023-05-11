@@ -71,35 +71,55 @@ We are now at the last part of step by step guide on how to simulate STM32 proje
 
 
 ## STM 32 CUBE PROGRAM :
-
+```
+#include "main.h"
+#include "stdio.h"
+#include "stdbool.h"
+bool pushbutton;
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 
 int main(void)
 {
-
-HAL_Init();
-SystemClock_Config();
-MX_GPIO_Init();
-
-while (1)
-  {
-	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-	  HAL_Delay(500);
-	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
-	  HAL_Delay(500);
-  }
   
+  HAL_Init();
+
+  
+  SystemClock_Config();
+
+  
+  MX_GPIO_Init();
+  
+  while (1)
+  {
+	  pushbutton= HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_3);
+	  if(pushbutton==0)
+	  {
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
+          HAL_Delay(500);
+          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
+          HAL_Delay(500);
+	  }
+	  else
+	  {
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
+	  }
+    
+  }
+ 
 }
+
 
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+
   
   __HAL_RCC_PWR_CLK_ENABLE();
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE2);
+
   
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
@@ -109,8 +129,9 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
   
-   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
@@ -123,51 +144,65 @@ void SystemClock_Config(void)
   }
 }
 
+
 static void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
+
   
   __HAL_RCC_GPIOA_CLK_ENABLE();
+
   
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
+
   
-  GPIO_InitStruct.Pin = GPIO_PIN_5;
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  
+  GPIO_InitStruct.Pin = GPIO_PIN_3;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
 
 void Error_Handler(void)
 {
-   __disable_irq();
+  
+  __disable_irq();
   while (1)
   {
   }
-  }
-
+ 
 }
 
 #ifdef  USE_FULL_ASSERT
 
 void assert_failed(uint8_t *file, uint32_t line)
 {
-
+  
 }
-#endif
+#endif 
 
 
+
+```
 
 ## Output screen shots of proteus  :
 
+![image](https://github.com/kavyasenthamarai/EXPERIMENT--03-SIMULATION-OF-PUSHBUTTON-AND-LED-WITH-PROTEUS-/assets/118668727/1e80fd73-4292-44bf-b0a2-484fb974a0a7)
 
-![image](https://user-images.githubusercontent.com/118668727/235296129-368a13df-d1cd-4ff9-b384-def93ebba11c.png)
+![image](https://github.com/kavyasenthamarai/EXPERIMENT--03-SIMULATION-OF-PUSHBUTTON-AND-LED-WITH-PROTEUS-/assets/118668727/3c864f7a-a27d-4b77-8959-09117edebb10)
 
 
 ## Proteus layout(Add pdf screen shot of circuit here)
- 
- ![image](https://user-images.githubusercontent.com/118668727/235296121-753fbecf-8f3f-4986-9253-b37a79bbe40c.png)
+
+![image](https://github.com/kavyasenthamarai/EXPERIMENT--03-SIMULATION-OF-PUSHBUTTON-AND-LED-WITH-PROTEUS-/assets/118668727/c71aad48-2236-4000-b49f-cb17bcbc28ba)
+
 
  
  
